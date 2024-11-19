@@ -217,7 +217,7 @@ def mapNonLinear(x,p):
 
     # IMPLEMENT THIS METHOD
     N = x.shape[0] # Number of samples
-    Xp = np.zeros(N, p + 1)
+    Xp = np.zeros((N, p + 1))
     for i in range(p + 1):
         Xp[:, i] = x**i
 
@@ -311,7 +311,7 @@ i = 0
 mses4_train = np.zeros((k,1))
 mses4 = np.zeros((k,1))
 opts = {'maxiter' : 20}    # Preferred value.                                                
-w_init = np.ones((X_i.shape[1],1))
+w_init = np.ones((X_i.shape[1],1)).flatten()
 for lambd in lambdas:
     args = (X_i, y, lambd)
     w_l = minimize(regressionObjVal, w_init, jac=True, args=args,method='CG', options=opts)
@@ -337,7 +337,7 @@ plt.show()
 
 # Problem 5
 pmax = 7
-lambda_opt = 0 # REPLACE THIS WITH lambda_opt estimated from Problem 3
+lambda_opt = 0.06 # REPLACE THIS WITH lambda_opt estimated from Problem 3
 mses5_train = np.zeros((pmax,2))
 mses5 = np.zeros((pmax,2))
 for p in range(pmax):
