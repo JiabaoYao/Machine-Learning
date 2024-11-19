@@ -26,7 +26,7 @@ Optimal p = 1 for lambda = 0 with mse = 3845.0347301734146
 Optimal p = 4 for lambda = 0.06 with mse = 3895.5826682835263
 ```
 
-The graph below shows some fluctuations between the MSE values obtained using SciPy and direct minimization; however, their overall trends are consistent. As λ increases, the optimal p values also increase.
+The graph below shows some fluctuations between the MSE values obtained using Scipy and direct minimization; however, their overall trends are consistent. As λ increases, the optimal p values also increase.
 
 From the MSE on the training data, the model without regularization performs better as p increases. However, for the test data, the model with regularization performs significantly better, particularly as the value of p increases.
 ![](Non_linear_regression.png)
