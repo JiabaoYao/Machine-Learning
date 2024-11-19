@@ -18,30 +18,19 @@ def ldaLearn(X,y):
     # y - a N x 1 column vector indicating the labels for each training example
     
     # calculate mean
-    x_train_mean = X.mean()
+    d = X.shape[1]
+    labels = y.reshape(y.size)
+    unique_labels = np.unique(labels)
+    unique_label_size = unique_labels.shape[0]
+    means = np.zeros((d, np.unique(labels).shape[0]))
 
-    # stardardize the dataset
-    train_std = X.std()
-    x_train_std = (X - x_train_mean) / train_std
+    for i in range(unique_label_size):
+        means[:, i] = np.mean(X[labels == unique_labels[i]], axis=0)
 
-    # calculate prior probabilities
-    unique_classes, count = np.unique(y, return_counts = True)
-    prior_p = count / len(y)
-    prior_map = dict(zip(unique_classes, prior_p))
+    covmat = np.cov(X, rowvar=False)
 
-    # calculate mean of each class
-    x_train = pd.DataFrame(x_train_std)
-    y_train = pd.DataFrame(y, columns=['Class'])
-    data = pd.concat([x_train, y_train], axis=1)
-    classes_mean = data.groupby("Class").mean()
+    return means, covmat
 
-
-    # Outputs
-    # means - A d x k matrix containing learnt means for each of the k classes
-    # covmat - A single d x d learnt covariance matrix 
-    
-    # IMPLEMENT THIS METHOD 
-    return means,covmat
 
 def qdaLearn(X,y):
     # Inputs
@@ -53,7 +42,28 @@ def qdaLearn(X,y):
     # covmats - A list of k d x d learnt covariance matrices for each of the k classes
     
     # IMPLEMENT THIS METHOD
-    return means,covmats
+    # Ensure inputs are numpy arrays
+    y = np.array(y).flatten()  # Flatten y to a 1D array
+
+    # Number of features and unique classes
+    N, d = X.shape  # Number of training examples and feature dimension
+    unique_classes = np.unique(y)  # Unique class labels
+    k = len(unique_classes)  # Number of classes
+
+    # Initialize outputs
+    means = np.zeros((d, k))  # d x k matrix for means
+    covmats = []  # List of k covariance matrices
+
+    # Compute means and covariance matrices for each class
+    for i, label in enumerate(unique_classes):
+        X_cls = X[y == label]
+        mean_cls = X_cls.mean(axis=0)
+        covmat_cls = np.cov(X_cls, rowvar=False)
+
+        means[:, i] = mean_cls  # Store mean as a column
+        covmats.append(covmat_cls)  # Append covariance matrix
+
+    return means, covmats
 
 def ldaTest(means,covmat,Xtest,ytest):
     # Inputs
@@ -65,7 +75,28 @@ def ldaTest(means,covmat,Xtest,ytest):
     # ypred - N x 1 column vector indicating the predicted labels
 
     # IMPLEMENT THIS METHOD
-    return acc,ypred
+    ytest = np.array(ytest).flatten()  # Flatten ytest to a 1D array
+
+    N, d = Xtest.shape
+    k = means.shape[1]
+
+    # Inverse of the shared covariance matrix
+    covmat_inv = np.linalg.inv(covmat)
+
+    results = np.zeros((N, k))
+
+    for i in range(k):
+        mean_k = means[:, i]
+        for j in range(N):
+            x = Xtest[j]
+            results[j, i] = x @ covmat_inv @ mean_k - 0.5 * (mean_k.T @ covmat_inv @ mean_k)
+
+    ypred = np.argmax(results, axis=1) + 1
+    ypred = ypred.reshape(-1, 1)
+
+    acc = np.mean(ypred.flatten() == ytest)
+
+    return acc, ypred
 
 def qdaTest(means,covmats,Xtest,ytest):
     # Inputs
@@ -77,7 +108,35 @@ def qdaTest(means,covmats,Xtest,ytest):
     # ypred - N x 1 column vector indicating the predicted labels
 
     # IMPLEMENT THIS METHOD
-    return acc,ypred
+    ytest = np.array(ytest).flatten()
+
+    N, d = Xtest.shape
+    K = means.shape[1]
+
+    results = np.zeros((N, K))
+
+    for k in range(K):
+        mean_k = means[:, k]
+        covmat_k = covmats[k]
+        covmat_k_inv = np.linalg.inv(covmat_k)
+        covmat_k_det = np.linalg.det(covmat_k)
+
+        for i in range(N):
+            x = Xtest[i]
+            diff = x - mean_k
+            results[i, k] = (
+                    -0.5 * diff.T @ covmat_k_inv @ diff
+                    - 0.5 * np.log(covmat_k_det)
+                    + np.log(1 / K)  # Assuming equal priors for simplicity
+            )
+
+    ypred = np.argmax(results, axis=1) + 1
+    ypred = ypred.reshape(-1, 1)
+
+    # Calculate the accuracy
+    acc = np.mean(ypred.flatten() == ytest)
+
+    return acc, ypred
 
 def learnOLERegression(X,y):
     # Inputs:                                                         
@@ -86,7 +145,12 @@ def learnOLERegression(X,y):
     # Output: 
     # w = d x 1 
 	
-    # IMPLEMENT THIS METHOD                                                   
+    # IMPLEMENT THIS METHOD
+    # w = (X^T X)^-1 X^T y
+    XTX = X.T @ X  # d x d
+    XTy = X.T @ y  # d x 1
+    w = np.linalg.inv(XTX) @ XTy  # d x 1
+
     return w
 
 def learnRidgeRegression(X,y,lambd):
@@ -99,8 +163,15 @@ def learnRidgeRegression(X,y,lambd):
 
     # IMPLEMENT THIS METHOD
     # w=(x^T*X + λI)^(-1)X^T*y
-    I = np.eye(X.shape[1])
-    w = np.linalg.inv(X.T @ X + lambd * I) @ (X.T @ y)     
+    N, d = X.shape
+
+    # Compute weights using the Ridge Regression formula
+    I = np.eye(d)  # Identity matrix of size d x d
+    XTX = X.T @ X  # d x d
+    XTy = X.T @ y  # d x 1
+
+    # Ridge regression formula: w = (X^T X + λI)^-1 X^T y
+    w = np.linalg.inv(XTX + lambd * I) @ XTy  # d x 1
 
     return w
 
