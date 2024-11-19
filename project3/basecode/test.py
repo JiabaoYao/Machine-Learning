@@ -326,7 +326,7 @@ for i, lambd in enumerate(lambdas):
         optimal_lambda = lambd
         min_mse = mses4[i]
 
-print(f"optimal_lambda = {optimal_lambda} for problem 4")
+print(f"Optimal lambda = {optimal_lambda} for problem 4 with {opts['maxiter']} iterations")
 
 fig = plt.figure(figsize=[12,6])
 plt.subplot(1, 2, 1)
