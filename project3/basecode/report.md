@@ -1,5 +1,5 @@
 # CSE 574 Project3 Report
-* Members in Group 6: Jiabao Yao(50602483), Han Li(50993977)*
+*Members in Group 6: Jiabao Yao(50602483), Han Li(50993977)*
 
 
 ## Problem 1
