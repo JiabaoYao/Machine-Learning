@@ -31,3 +31,8 @@ The graph below shows some fluctuations between the MSE values obtained using Sc
 From the MSE on the training data, the model without regularization performs better as p increases. However, for the test data, the model with regularization performs significantly better, particularly as the value of p increases.
 ![](Non_linear_regression.png)
 
+## Problem 6
+MSE (Mean Squared Error) is an important metric to compare how well linear regression models perform, with smaller MSE values showing a more accurate model.
+
+There are a few things to keep in mind when building a linear regression model. First, adding a bias term can help reduce the MSE and improve the model’s performance. Also, Ridge Regression can be better than Ordinary Least Squares if we choose the right regularization parameter, as it helps prevent overfitting and makes the model work better on new data. Lastly, if the dataset, like a diabetes dataset, is large, using gradient descent with enough iterations might be a better option because it scales better than direct minimization.
+
