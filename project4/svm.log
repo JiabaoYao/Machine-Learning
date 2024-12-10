@@ -1,0 +1,33 @@
+[linear]Validation set Accuracy:93.64%
+[linear]Testing set Accuracy:93.78%
+[rbf-1]Validation set Accuracy:21.43%
+[rbf-1]Testing set Accuracy:22.71%
+[rbf]Validation set Accuracy:97.89%
+[rbf]Testing set Accuracy:97.87%
+
+
+
+[rbf]Validation set Accuracy:97.89%
+[rbf]Testing set Accuracy:97.87%
+[rbf]Validation set Accuracy:98.45%
+[rbf]Testing set Accuracy:98.34%
+[rbf]Validation set Accuracy:98.44000000000001%
+[rbf]Testing set Accuracy:98.31%
+[rbf]Validation set Accuracy:98.44000000000001%
+[rbf]Testing set Accuracy:98.31%
+[rbf]Validation set Accuracy:98.44000000000001%
+[rbf]Testing set Accuracy:98.31%
+[rbf]Validation set Accuracy:98.44000000000001%
+[rbf]Testing set Accuracy:98.31%
+[rbf]Validation set Accuracy:98.44000000000001%
+[rbf]Testing set Accuracy:98.31%
+[rbf]Validation set Accuracy:98.44000000000001%
+[rbf]Testing set Accuracy:98.31%
+[rbf]Validation set Accuracy:98.44000000000001%
+[rbf]Testing set Accuracy:98.31%
+[rbf]Validation set Accuracy:98.44000000000001%
+[rbf]Testing set Accuracy:98.31%
+[rbf]Validation set Accuracy:98.44000000000001%
+[rbf]Testing set Accuracy:98.31%
+[0.9787, 0.9834, 0.9831, 0.9831, 0.9831, 0.9831, 0.9831, 0.9831, 0.9831, 0.9831, 0.9831]
+[0.9789, 0.9845, 0.9844, 0.9844, 0.9844, 0.9844, 0.9844, 0.9844, 0.9844, 0.9844, 0.9844]

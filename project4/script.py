@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.io import loadmat
 from scipy.optimize import minimize
+from sklearn import svm, metrics
 
 
 def preprocess():
@@ -278,6 +279,95 @@ print('\n\n--------------SVM-------------------\n\n')
 ##################
 # YOUR CODE HERE #
 ##################
+train_data, train_label, validation_data, validation_label, test_data, test_label = preprocess()
+
+
+# linear
+svm_model = svm.SVC( kernel='linear', verbose=True)
+
+svm_model.fit(train_data, train_label)
+
+y_pred = svm_model.predict(validation_data)
+linear_validation_accuracy = metrics.accuracy_score(validation_label, y_pred)
+
+print('[linear]Validation set Accuracy:' + str(100 * linear_validation_accuracy) + '%')
+y_pred = svm_model.predict(test_data)
+linear_test_accuracy = metrics.accuracy_score(test_label, y_pred)
+print('[linear]Testing set Accuracy:' + str(100 * linear_test_accuracy) + '%')
+
+# rbf gamma=1.0
+svm_model = svm.SVC( kernel='rbf', gamma=1.0, verbose=True)
+
+svm_model.fit(train_data, train_label)
+
+y_pred = svm_model.predict(validation_data)
+rbf_gamma_1_validataionaccuracy = metrics.accuracy_score(validation_label, y_pred)
+
+print('[rbf-1]Validation set Accuracy:' + str(100 * rbf_gamma_1_validataionaccuracy) + '%')
+y_pred = svm_model.predict(test_data)
+rbf_gamma_1_test_accuracy = metrics.accuracy_score(test_label, y_pred)
+print('[rbf-1]Testing set Accuracy:' + str(100 * rbf_gamma_1_test_accuracy) + '%')
+
+
+# rbf gamma=default
+svm_model = svm.SVC( kernel='rbf', verbose=True)
+
+svm_model.fit(train_data, train_label)
+
+y_pred = svm_model.predict(validation_data)
+rbf_gamma_default_validataion_accuracy = metrics.accuracy_score(validation_label, y_pred)
+
+print('[rbf]Validation set Accuracy:' + str(100 * rbf_gamma_default_validataion_accuracy) + '%')
+y_pred = svm_model.predict(test_data)
+rbf_gamma_default_test_accuracy = metrics.accuracy_score(test_label, y_pred)
+print('[rbf]Testing set Accuracy:' + str(100 * rbf_gamma_default_test_accuracy) + '%')
+
+C_list = [1,10,20,30,40,50,60,70,80,90,100]
+C_result = []
+C_validation = []
+for c in C_list:
+    # rbf gamma=default
+    svm_model = svm.SVC(C=c, kernel='rbf', verbose=True)
+
+    svm_model.fit(train_data, train_label)
+
+    y_pred = svm_model.predict(validation_data)
+    accuracy = metrics.accuracy_score(validation_label, y_pred)
+
+    print('[rbf]Validation set Accuracy:' + str(100 * accuracy) + '%')
+    C_validation.append(accuracy * 100)
+    y_pred = svm_model.predict(test_data)
+    accuracy = metrics.accuracy_score(test_label, y_pred)
+    print('[rbf]Testing set Accuracy:' + str(100 * accuracy) + '%')
+    C_result.append(accuracy * 100)
+
+
+
+
+
+import matplotlib.pyplot as plt
+
+
+x_list = ['linear', 'rbf-1', 'rbf']
+validation_list = [linear_validation_accuracy, rbf_gamma_1_validataionaccuracy, rbf_gamma_default_validataion_accuracy]
+test_list = [linear_test_accuracy, rbf_gamma_1_test_accuracy, rbf_gamma_default_test_accuracy]
+plt.bar(x_list, validation_list, label='Validation')
+plt.bar(x_list, test_list, label='Testing')
+
+plt.savefig('svm1.png')
+
+plt.clf()
+
+x_list = [ 'C=1', 'C=10', 'C=20', 'C=30', 'C=40', 'C=50', 'C=60', 'C=70', 'C=80', 'C=90', 'C=100']
+validation_list=  C_validation
+test_list =  C_result
+
+plt.plot(x_list, validation_list, label='Validation')
+plt.plot(x_list, test_list, label='Testing')
+plt.savefig('svm2.png')
+
+
+
 
 
 """
