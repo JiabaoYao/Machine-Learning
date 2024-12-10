@@ -345,14 +345,24 @@ for c in C_list:
 
 
 
+
 import matplotlib.pyplot as plt
+import numpy as np
 
 
-x_list = ['linear', 'rbf-1', 'rbf']
+x_list = ['linear', 'rbf-with gamma=1', 'rbf-with default params']
 validation_list = [linear_validation_accuracy, rbf_gamma_1_validataionaccuracy, rbf_gamma_default_validataion_accuracy]
 test_list = [linear_test_accuracy, rbf_gamma_1_test_accuracy, rbf_gamma_default_test_accuracy]
-plt.bar(x_list, validation_list, label='Validation')
-plt.bar(x_list, test_list, label='Testing')
+plt.ylabel('Accuracy')
+plt.xlabel('Kernel Params')
+
+x = np.arange(len(x_list))
+x_group1 = x
+x_group2 = x + 0.4
+plt.bar(x_group1, validation_list, width=0.4, align='center', label='Validation')
+plt.bar(x_group2, test_list, width=0.4, align='center',label='Testing')
+plt.xticks(x + 0.2, x_list)
+plt.legend(fontsize=12) 
 
 plt.savefig('svm1.png')
 
@@ -361,9 +371,12 @@ plt.clf()
 x_list = [ 'C=1', 'C=10', 'C=20', 'C=30', 'C=40', 'C=50', 'C=60', 'C=70', 'C=80', 'C=90', 'C=100']
 validation_list=  C_validation
 test_list =  C_result
-
+plt.ylabel('Accuracy')
+plt.xlabel('C')
 plt.plot(x_list, validation_list, label='Validation')
 plt.plot(x_list, test_list, label='Testing')
+plt.legend(fontsize=12) 
+
 plt.savefig('svm2.png')
 
 
